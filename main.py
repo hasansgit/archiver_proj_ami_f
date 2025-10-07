@@ -1,4 +1,5 @@
 import argparse
+import archiver as arch
 
 
 def main():
@@ -19,10 +20,15 @@ def main():
     indir = args.indir
     outdir = args.outdir
     chunksize = args.chunksize
-
+    algorithm = args.algorithm
 
     if args.mode == "compress":
-        pass
+        archiver = arch.Archiver().create(algorithm)
+        archiver.compress(indir, outdir, chunksize)
+
+    elif args.mode == "decompress":
+        archiver = arch.Archiver().create(algorithm)
+        archiver.decompress(indir, outdir, chunksize)
     else:
         pass
 
