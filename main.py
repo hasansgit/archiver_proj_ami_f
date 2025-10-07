@@ -1,5 +1,9 @@
 import argparse
+import pathlib
+
 import archiver as arch
+from archiver import ArchiverInterface
+import rle, huffman
 
 
 def main():
@@ -23,14 +27,18 @@ def main():
     algorithm = args.algorithm
 
     if args.mode == "compress":
-        archiver = arch.Archiver().create(algorithm)
-        archiver.compress(indir, outdir, chunksize)
-
+        archiver = rle.RLE() if algorithm == "rle" else huffman.Huffman()
+        compress(indir, outdir, archiver)
     elif args.mode == "decompress":
-        archiver = arch.Archiver().create(algorithm)
-        archiver.decompress(indir, outdir, chunksize)
+        pass
     else:
         pass
+
+
+def compress(indir: str, outdir: str, archiver: ArchiverInterface) -> None:
+    indir = pathlib.Path(indir)
+    outdir = pathlib.Path(outdir)
+    archiver.archive(indir, outdir)
 
 
 if __name__ == '__main__':

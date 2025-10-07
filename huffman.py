@@ -1,4 +1,4 @@
-import archiver
+class Huffman:
+    def archive(self) -> None: ...
 
-class Huffman(archiver.Archiver):
-    pass
+    def unarchive(self) -> None: ...

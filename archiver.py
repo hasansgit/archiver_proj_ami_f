@@ -1,23 +1,7 @@
-from abc import ABC, abstractmethod
-
-from huffman import Huffman
-from rle import RLE
+from typing import Protocol
 
 
-class Archiver(ABC):
-    def __init__(self):
-        pass
+class ArchiverInterface(Protocol):
+    def archive(self, indir: str, outdir: str, chunksize: int) -> None: ...
 
-    @abstractmethod
-    def archive(self, indir: str, outdir: str, chunksize: int) -> None:
-        pass
-
-    @abstractmethod
-    def unarchive(self, indir: str, outdir: str, chunksize: int) -> None:
-        pass
-
-    @classmethod
-    def create(cls, algorithm: str):
-        if algorithm == "rle":
-            return RLE()
-        return Huffman()
+    def unarchive(self, indir: str, outdir: str, chunksize: int) -> None: ...
