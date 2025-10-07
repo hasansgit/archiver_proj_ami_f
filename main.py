@@ -1,9 +1,9 @@
 import argparse
 import pathlib
 
-import archiver as arch
+import huffman
+import rle
 from archiver import ArchiverInterface
-import rle, huffman
 
 
 def main():
