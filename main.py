@@ -21,16 +21,17 @@ def main():
     parser.add_argument("outdir", help="output directory")
 
     args = parser.parse_args()
-    indir = args.indir
-    outdir = args.outdir
+    indir: str = args.indir
+    outdir: str = args.outdir
     chunksize = args.chunksize
-    algorithm = args.algorithm
+    algorithm: str = args.algorithm
 
     if args.mode == "compress":
-        archiver = rle.RLE() if algorithm == "rle" else huffman.Huffman()
+        archiver: ArchiverInterface = rle.RLE() if algorithm == "rle" else huffman.Huffman()
         compress(indir, outdir, archiver)
     elif args.mode == "decompress":
-        pass
+        archiver: ArchiverInterface = rle.RLE() if algorithm == "rle" else huffman.Huffman()
+        decompress(indir, outdir, archiver)
     else:
         pass
 
@@ -39,6 +40,12 @@ def compress(indir: str, outdir: str, archiver: ArchiverInterface) -> None:
     indir = pathlib.Path(indir)
     outdir = pathlib.Path(outdir)
     archiver.archive(indir, outdir)
+
+
+def decompress(indir: str, outdir: str, archiver: ArchiverInterface) -> None:
+    indir = pathlib.Path(indir)
+    outdir = pathlib.Path(outdir)
+    archiver.unarchive(indir, outdir)
 
 
 if __name__ == '__main__':

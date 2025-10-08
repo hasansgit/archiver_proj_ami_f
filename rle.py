@@ -1,5 +1,6 @@
 from typing import Callable
 
+
 class RLE:
     def archive(self, indir: str, outdir: str, chunksize: int) -> None:
         self.read_and_write(indir, outdir, chunksize, self.compress)
