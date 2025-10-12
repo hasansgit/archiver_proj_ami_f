@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-class RLE:
+class RleArchiver:
     def archive(self, indir: Path, outdir: Path) -> None:
         chunksize: int = 256
         with open(indir, "rb") as input:
@@ -13,7 +13,7 @@ class RLE:
                 with open(outdir, "ab") as output:
                     output.write(out)
 
-    def unarchive(self, indir: Path, outdir: Path):
+    def unarchive(self, indir: Path, outdir: Path) -> None:
         with open(indir, "rb") as input:
             while True:
                 byte = input.read(1)

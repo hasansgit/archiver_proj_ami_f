@@ -1,15 +1,15 @@
 import argparse
 from pathlib import Path
 
-import huffman
-import rle
+from archivers.archiver import ArchiverInterface
+from archivers.factory import create_archiver
 
 
 def main():
     parser = argparse.ArgumentParser("Simple archiver")
     parser.add_argument("mode", choices=["compress", "decompress", "zip", "unzip", "tar", "untar"], help="Mode to use")
-    parser.add_argument("-a", "--algorithm", choices=["rle", "huffman"], default="rle",
-                        help="Algorithm to use (default: rle)")
+    parser.add_argument("-t", "--type", choices=["zip", "tar", "rle", "huffman"], default="zip",
+                        help="Archive type to use (default: zip)")
     # parser.add_argument("-c", "--chunksize", default=1024 * 1024 * 64, type=int,
     #                     help="Chunk size in MBs (default: 64MB)")
     # parser.add_argument("-cb", "--chunksizebytes", default=1024 * 1024 * 64, type=int,
@@ -21,18 +21,24 @@ def main():
 
     args = parser.parse_args()
     indir: Path = Path(args.indir)
-    outdir: Path = Path(args.outdir)
+    outdir: Path = Path(args.outdir if args.outdir else args.indir)
+    mode: str = args.mode
+    password = args.setpassword
     # chunksize: int = args.chunksize
-    algorithm: str = args.algorithm
+    type: str = args.type
 
-    if args.mode == "compress" or args.mode == "decompress":
-        archiver = rle.RLE() if algorithm == "rle" else huffman.Huffman()
-        if args.mode == "compress":
-            archiver.archive(indir, outdir)
-        else:
-            archiver.unarchive(indir, outdir)
+    try:
+        f = open(indir)
+        f.close()
+    except FileNotFoundError:
+        print(f"{indir} no such file or directory")
+        return
+
+    archiver: ArchiverInterface = create_archiver(type, password)
+    if mode == "compress":
+        archiver.archive(indir, outdir)
     else:
-        pass
+        archiver.unarchive(indir, outdir)
 
 
 if __name__ == '__main__':
