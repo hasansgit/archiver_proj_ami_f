@@ -17,7 +17,7 @@ def main():
     parser.add_argument("-sp", "--setpassword", choices=[True, False], default=False,
                         help="Set password to use (default: False)")
     parser.add_argument("indir", help="file or directory")
-    parser.add_argument("outdir", help="output directory")
+    parser.add_argument("-o", "--outdir", help="output directory")
 
     args = parser.parse_args()
     indir: Path = Path(args.indir)

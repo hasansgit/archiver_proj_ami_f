@@ -5,20 +5,28 @@ from pathlib import Path
 
 class ZipArchiver:
 
-    def __init__(self, password: str = None) -> None:
+    def __init__(self, password: str | None = None) -> None:
         self.password = password
 
     def archive(self, indir: Path, outdir: Path) -> None:
         with zipfile.ZipFile(outdir, "w", zipfile.ZIP_DEFLATED) as zf:
-            if self.password is not None:
+            if self.password:
                 zf.setpassword(bytes(self.password, "utf-8"))
-            zf.write(indir)
+            if indir.is_file():
+                zf.write(indir)
+            else:
+                for file in indir.rglob("*"):
+                    if file.is_file():
+                        zf.write(file, arcname=file.relative_to(indir))
 
-    def unarchive(self, indir: Path, outdir: Path = None) -> None:
+    def unarchive(self, indir: Path, outdir: Path) -> None:
         try:
             with zipfile.ZipFile(indir, "r") as zf:
-                if self.password is not None:
+                if self.password:
                     zf.setpassword(bytes(self.password, "utf-8"))
+                if outdir.exists() and not outdir.is_dir():
+                    outdir = outdir.with_name(outdir.name + "_unpacked")
+                outdir.mkdir(parents=True, exist_ok=True)
                 zf.extractall(outdir)
         except zipfile.BadZipFile:
             print("Ошибка: файл не является ZIP-архивом или поврежден")
