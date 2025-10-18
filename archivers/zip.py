@@ -5,13 +5,8 @@ from pathlib import Path
 
 class ZipArchiver:
 
-    def __init__(self, password: str | None = None) -> None:
-        self.password = password
-
     def archive(self, indir: Path, outdir: Path) -> None:
         with zipfile.ZipFile(outdir, "w", zipfile.ZIP_DEFLATED) as zf:
-            if self.password:
-                zf.setpassword(bytes(self.password, "utf-8"))
             if indir.is_file():
                 zf.write(indir)
             else:
@@ -22,8 +17,6 @@ class ZipArchiver:
     def unarchive(self, indir: Path, outdir: Path) -> None:
         try:
             with zipfile.ZipFile(indir, "r") as zf:
-                if self.password:
-                    zf.setpassword(bytes(self.password, "utf-8"))
                 if outdir.exists() and not outdir.is_dir():
                     outdir = outdir.with_name(outdir.name + "_unpacked")
                 outdir.mkdir(parents=True, exist_ok=True)
