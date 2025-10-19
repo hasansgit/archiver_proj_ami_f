@@ -1,8 +1,8 @@
-from project.archivers.archiver import ArchiverInterface
-from project.archivers.huffman import HuffmanArchiver
-from project.archivers.rle import RleArchiver
-from project.archivers.tar import TarArchiver
-from project.archivers.zip import ZipArchiver
+from archivers.archiver import ArchiverInterface
+from archivers.huffman import HuffmanArchiver
+from archivers.rle import RleArchiver
+from archivers.tar import TarArchiver
+from archivers.zip import ZipArchiver
 
 
 def create_archiver(type_: str) -> ArchiverInterface:
