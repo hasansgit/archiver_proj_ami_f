@@ -19,7 +19,7 @@ def create_archiver(type_: str) -> ArchiverInterface:
             raise ValueError(f"Unknown archiver type: {type_}")
 
 
-def outdir_dot(outdir: str, type_: str, mode: str) -> str:
+def outdir_suff(outdir: str, type_: str, mode: str) -> str:
     if mode == "compress":
         match type_:
             case "zip":
@@ -30,3 +30,6 @@ def outdir_dot(outdir: str, type_: str, mode: str) -> str:
                 return f"{outdir}.rle"
             case "huffman":
                 return f"{outdir}.huff"
+    if type_ == "tar":
+        return outdir[:-7]
+    return outdir[:outdir.rfind(".")]

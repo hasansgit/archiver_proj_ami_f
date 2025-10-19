@@ -1,42 +1,60 @@
+import os
 from pathlib import Path
 
-from archivers.archiver import ArchiverInterface
-from archivers.factory import create_archiver, outdir_dot
-from encryption import encryption
-from arg_parse.arg_parse import arg_parser
 import validating
+from archivers import factory
+from archivers.archiver import ArchiverInterface
+from arg_parse.arg_parse import arg_parser
+from encryption import encryption
 
 
 def main():
     parser = arg_parser()
     args = parser.parse_args()
-    indir: Path = Path(args.indir)
-    mode: str = args.mode
-    password = args.setpassword
-    # chunksize: int = args.chunksize
-    type: str = args.type
-    outdir = (outdir_dot(args.outdir if args.outdir else args.indir, type))
-    if not validating.suff_validing.decompress(outdir, type, password):
-        return
-    if password == "True" and suff == "enc":
-        outdir = outdir[:-4]
+    indir = args.indir
+    decrypted = False
 
-    try:
-        f = open(indir)
-        f.close()
-    except FileNotFoundError:
-        print(f"{indir} no such file or directory")
+    if not Path(indir).exists():
+        print("Input directory does not exist")
         return
-    if mode:
-        archiver: ArchiverInterface = create_archiver(type)
-        if mode == "compress":
-            archiver.archive(indir, outdir)
-        else:
-            archiver.unarchive(indir, outdir)
-    if password == 'True':
+
+    if validating.encrypt.is_encrypted(indir):
+        in_path = Path(indir)
+        indir = indir[:-4]
+        out_path = Path(indir)
         password = input("Password: ")
-        encryption.encrypt(indir, outdir, password)
+        encryption.encrypt(in_path, out_path, password)
+        os.remove(in_path)
+        decrypted = True
+
+    in_path = Path(indir)
+
+    type_ = args.type
+    mode = args.mode
+
+    if mode == "decompress" and validating.suff_validing.decompress(indir, type_):
+        return
+
+    outdir = (args.outdir if args.outdir else factory.outdir_suff(indir, type_, mode))
+    out_path = Path(outdir)
+
+    if mode:
+        archiver: ArchiverInterface = factory.create_archiver(type_)
+        if mode == "compress":
+            archiver.archive(in_path, out_path)
+        else:
+            archiver.unarchive(in_path, out_path)
+        in_path = out_path
+
+    password = (True if args.password == "True" else False)
+
+    if not decrypted and password:
+        password = input("Password: ")
+        out_path = Path(outdir + ".enc")
+        encryption.encrypt(in_path, out_path, password)
+        if mode == "compress":
+            os.remove(in_path)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
