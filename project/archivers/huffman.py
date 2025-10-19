@@ -13,7 +13,10 @@ class HuffmanArchiver:
                 frequency.append(c)
                 if not c:
                     break
-            heap = [[freq, [char, ""]] for char, freq in Counter(frequency).items()]
+            heap = [
+                [freq, [char, ""]]
+                for char, freq in Counter(frequency).items()
+            ]
             heapq.heapify(heap)
             while len(heap) > 1:
                 left = heapq.heappop(heap)

@@ -32,4 +32,4 @@ def outdir_suff(outdir: str, type_: str, mode: str) -> str:
                 return f"{outdir}.huff"
     if type_ == "tar":
         return outdir[:-7]
-    return outdir[:outdir.rfind(".")]
+    return outdir[: outdir.rfind(".")]

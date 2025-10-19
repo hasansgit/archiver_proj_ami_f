@@ -36,7 +36,9 @@ def main():
     if mode == "decompress" and suff_val_dec(indir, type_):
         return
 
-    outdir = (args.outdir if args.outdir else factory.outdir_suff(indir, type_, mode))
+    outdir = args.outdir \
+        if args.outdir \
+        else factory.outdir_suff(indir, type_, mode)
     out_path = Path(outdir)
     if out_path.exists():
         out_path = Path("(1)" + outdir)
@@ -49,7 +51,7 @@ def main():
             archiver.unarchive(in_path, out_path)
         in_path = out_path
 
-    password = (True if args.setpassword == "True" else False)
+    password = True if args.setpassword == "True" else False
 
     if not decrypted and password:
         password = input("Password: ")
