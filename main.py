@@ -4,7 +4,7 @@ from pathlib import Path
 from archivers import factory
 from archivers.archiver import ArchiverInterface
 from arg_parse.arg_parse import arg_parser
-from project.encryption import encryption
+from encryption import encryption
 from validating.encrypt import is_encrypted
 from validating.suff_validing import decompress as suff_val_dec
 
