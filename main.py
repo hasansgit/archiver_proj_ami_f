@@ -3,6 +3,7 @@ from pathlib import Path
 
 from archivers import factory
 from archivers.archiver import ArchiverInterface
+from archivers.factory import outdir_suff
 from arg_parse.arg_parse import arg_parser
 from encryption import encryption
 from validating.encrypt import is_encrypted
@@ -36,9 +37,7 @@ def main():
     if mode == "decompress" and suff_val_dec(indir, type_):
         return
 
-    outdir = args.outdir \
-        if args.outdir \
-        else factory.outdir_suff(indir, type_, mode)
+    outdir = outdir_suff(args.outdir if args.outdir else indir, type_, mode)
     out_path = Path(outdir)
     if out_path.exists():
         out_path = Path("(1)" + outdir)
