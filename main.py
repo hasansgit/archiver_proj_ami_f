@@ -54,6 +54,8 @@ def main():
     password = True if args.setpassword == "True" else False
 
     if not decrypted and password:
+        if mode == "decompress":
+            return
         password = input("Password: ")
         out_path = Path(outdir + ".enc")
         encryption.encrypt(in_path, out_path, password)
