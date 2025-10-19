@@ -2,7 +2,10 @@ import argparse
 
 
 def arg_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser("Simple archiver")
+    parser = argparse.ArgumentParser(
+        prog="Simple archiver",
+        description="Can compress/decompress/encrypt files",
+    )
     parser.add_argument("indir", help="file or directory")
     parser.add_argument("-m", "--mode", choices=["compress", "decompress"], help="Mode to use")
     parser.add_argument("-t", "--type", choices=["zip", "tar", "rle", "huffman"], default="zip",
