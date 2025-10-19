@@ -1,11 +1,12 @@
 import os
 from pathlib import Path
 
-import validating
 from archivers import factory
 from archivers.archiver import ArchiverInterface
 from arg_parse.arg_parse import arg_parser
 from encryption import encryption
+from validating.encrypt import is_encrypted
+from validating.suff_validing import decompress as suff_val_dec
 
 
 def main():
@@ -18,7 +19,7 @@ def main():
         print("Input directory does not exist")
         return
 
-    if validating.encrypt.is_encrypted(indir):
+    if is_encrypted(indir):
         in_path = Path(indir)
         indir = indir[:-4]
         out_path = Path(indir)
@@ -32,11 +33,13 @@ def main():
     type_ = args.type
     mode = args.mode
 
-    if mode == "decompress" and validating.suff_validing.decompress(indir, type_):
+    if mode == "decompress" and suff_val_dec(indir, type_):
         return
 
     outdir = (args.outdir if args.outdir else factory.outdir_suff(indir, type_, mode))
     out_path = Path(outdir)
+    if out_path.exists():
+        out_path = Path("(1)" + outdir)
 
     if mode:
         archiver: ArchiverInterface = factory.create_archiver(type_)
@@ -46,7 +49,7 @@ def main():
             archiver.unarchive(in_path, out_path)
         in_path = out_path
 
-    password = (True if args.password == "True" else False)
+    password = (True if args.setpassword == "True" else False)
 
     if not decrypted and password:
         password = input("Password: ")
