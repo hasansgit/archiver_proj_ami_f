@@ -26,7 +26,6 @@ def main():
         out_path = Path(indir)
         password = input("Password: ")
         encryption.encrypt(in_path, out_path, password)
-        os.remove(in_path)
         decrypted = True
 
     in_path = Path(indir)
@@ -58,8 +57,6 @@ def main():
         password = input("Password: ")
         out_path = Path(outdir + ".enc")
         encryption.encrypt(in_path, out_path, password)
-        if mode == "compress":
-            os.remove(in_path)
 
 
 if __name__ == "__main__":
